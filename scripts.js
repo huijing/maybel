@@ -1,4 +1,4 @@
-//canvas setup
+// canvas setup
 const canvas = document.getElementById("canvas1");
 const context = canvas.getContext("2d");
 canvas.width = 800;
@@ -30,7 +30,7 @@ class background {
 
 const backgroundImage = new background(canvas.width, canvas.height);
 
-//create one asteroid
+// create one asteroid
 class enemy {
   constructor(x, y, width, height) {
     this.x = x;
@@ -56,14 +56,14 @@ class enemy {
   }
 }
 
-//create dinosaur
+// create dinosaur
 class player {
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.speed = 10;
+    this.speed = 5;
   }
 
   draw() {
@@ -81,14 +81,12 @@ class player {
     if (this.x + this.width > canvas.width) {
       this.x = canvas.width - this.width;
     }
-
-    // console.log({ player: this.x });
   }
 }
 
 dinosaur.push(new player(canvas.width / 2, canvas.height - 50, 30, 100));
 
-//keyboard interactivity
+// keyboard interactivity
 document.addEventListener("keydown", (event) => {
   if (event.key == "ArrowLeft") {
     left = true;
@@ -113,77 +111,53 @@ document.addEventListener("keyup", () => {
 // check all present asteroids for collision --> may need to convert into function to keep calling
 //increase number of asteroids through increasing asteroid.push
 
-setInterval(() => {
-  const x = 400;
-  // = Math.random() * canvas.width;
+const asteroidCreation = () => {
+  const x = Math.random() * canvas.width;
   asteroids.push(new enemy(x, -10, 30));
-  console.log(asteroids[1]);
-  // for (items of asteroids) {
-  //   return asteroids[items];
-  // }
-}, 2500);
+}
+
+setInterval(asteroidCreation, 2500);
 
 //**STUCK HERE *//
-//asteroid will come down. then check each asteroids x/y etc
-//once asteroid hits ground, remove it
-//repeat step 1
+// asteroid will come down. then check each asteroids x/y etc
+// once asteroid hits ground, remove it
+// repeat step 1
+
+const asteroidRemoval = () => {
+  for (let i = 0; i < asteroids.length; i++) {
+    if (asteroids[i].y > 500) {
+      asteroids.splice(0, 1);
+    }
+  }
+}
+
+// collision detection
+const checkCollision = () => {
+  if (asteroids.length) {
+    if (
+      asteroids[0].x < dinosaur[0].x + dinosaur[0].width &&
+      asteroids[0].x + asteroids[0].y > dinosaur[0].x &&
+      asteroids[0].y < dinosaur[0].y + dinosaur[0].width &&
+      asteroids[0].y + asteroids[0].width > dinosaur[0].y
+    ) {
+      console.log("true");
+    }
+  }
+};
 
 setInterval(() => {
-  //   for (let i = 0; i < asteroids.length; i++) {
-
-  //     if asteroids[i].y > 500{}
-  //   }
-
-  // if asteroids height is more than 500, remove it from array
-  // if asteroids height is less than 500, keep it in array
-  //do it by creating new array or use filter. filter the easiest. accessing key value of the objects
-  //   if items.y > 500;
-  //   asteroids.splice(0, 1);
-  // }
-
-  //**COLLISION DETECTION NOT WORKING TOO. SOMETHING TO DO WITH THE ARRAY */
-  if (
-    asteroids[0].x < dinosaur[0].x + dinosaur[0].width && //[1] = x, [2]=y, [3]=width, [4] = height
-    asteroids[0].x + asteroids[0].y > dinosaur[0].x &&
-    asteroids[0].y < dinosaur[0].y + dinosaur[0].width &&
-    asteroids[0].y + asteroids[0].width > dinosaur[0].y
-  ) {
-    console.log("true");
-  }
+  asteroidRemoval();
+  checkCollision();
+  console.log(asteroids)
 }, 100);
-
-//collision detection
-
-// console.log(asteroids);
-
-// {
-//   console.log("true");
-// }
-
-// const checkCollision = () => {
-//   console.log("running");
-//   console.log({ asteroid: asteroids });
-//   console.log({ dinosaur: dinosaur });
-//   if (
-//     asteroids.x < dinosaur.x + dinosaur.width &&
-//     asteroids.x + asteroids.width > dinosaur.x
-//     // &&
-//     // asteroids.y < dinosaur.y + dinosaur.height &&
-//     // asteroids.y + asteroids.height > dinosaur.y
-//   ) {
-//     console.log("true");
-//   }
-// };
-
-// setInterval(checkCollision, 200);
 
 //animation loop
 const animate = () => {
   context.clearRect(0, 0, canvas.width, canvas.height);
   backgroundImage.draw(context);
 
-  asteroids.forEach((ball) => {
-    ball.update();
+  asteroids.forEach((asteroid) => {
+    asteroid.update();
   });
 
   dinosaur.forEach((player) => {
