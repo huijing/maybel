@@ -38,7 +38,7 @@ class enemy {
     this.width = width;
     this.height = height;
     this.color = "blue";
-    this.yVelocity = 6;
+    this.yVelocity = 1;
     //link to sprite** this.image = document.getElementById();
   }
 
@@ -84,7 +84,7 @@ class player {
   }
 }
 
-dinosaur.push(new player(canvas.width / 2, canvas.height - 50, 30, 100));
+dinosaur.push(new player(canvas.width / 2, canvas.height - 100, 75, 100));
 
 // keyboard interactivity
 document.addEventListener("keydown", (event) => {
@@ -113,7 +113,7 @@ document.addEventListener("keyup", () => {
 
 const asteroidCreation = () => {
   const x = Math.random() * canvas.width;
-  asteroids.push(new enemy(x, -10, 30));
+  asteroids.push(new enemy(x, 0, 30, 30));
 }
 
 setInterval(asteroidCreation, 2500);
@@ -135,12 +135,11 @@ const asteroidRemoval = () => {
 const checkCollision = () => {
   if (asteroids.length) {
     if (
-      asteroids[0].x < dinosaur[0].x + dinosaur[0].width &&
-      asteroids[0].x + asteroids[0].y > dinosaur[0].x &&
-      asteroids[0].y < dinosaur[0].y + dinosaur[0].width &&
-      asteroids[0].y + asteroids[0].width > dinosaur[0].y
+      asteroids[0].x < dinosaur[0].x + dinosaur[0].width 
+      && asteroids[0].x + asteroids[0].width > dinosaur[0].x
+      && asteroids[0].height + asteroids[0].y > dinosaur[0].y
     ) {
-      console.log("true");
+      console.log('true');
     }
   }
 };
@@ -148,7 +147,6 @@ const checkCollision = () => {
 setInterval(() => {
   asteroidRemoval();
   checkCollision();
-  console.log(asteroids)
 }, 100);
 
 //animation loop
